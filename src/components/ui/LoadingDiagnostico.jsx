@@ -62,10 +62,11 @@ export default function LoadingDiagnostico({ messages }) {
                 className="w-2 h-2 rounded-full bg-accent-purple animate-pulse"
                 style={{ animationDelay: `${i * 0.3}s` }}
               />
-            )e}
+            ))}
           </div>
+        </div>
 
-          {{/* Rotating message */}
+        {/* Rotating message */}
         <p
           key={currentIndex}
           className="text-lg text-gray-300 animate-fade-in"
@@ -78,5 +79,5 @@ export default function LoadingDiagnostico({ messages }) {
         </p>
       </div>
     </div>
-  +}
-
+  );
+}
