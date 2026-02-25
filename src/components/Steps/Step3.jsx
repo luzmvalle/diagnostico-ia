@@ -3,9 +3,9 @@
 export default function Step3({ data, onChange, config }) {
   const usoOptions = config?.uso_ia_options || [];
   const barreirasOptions = config?.barreiras_options || [];
-  const title = config?.step3_title || 'Sua relaÃ§Ã£o com IA';
+  const title = config?.step3_title || 'Sua relação com IA';
   const subtitle =
-    config?.step3_subtitle || 'Queremos entender seu momento atual com inteligÃªncia artificial';
+    config?.step3_subtitle || 'Queremos entender seu momento atual com inteligência artificial';
 
   const selectedBarreiras = data.barreiras_ia || [];
 
@@ -24,7 +24,7 @@ export default function Step3({ data, onChange, config }) {
       {/* Uso atual */}
       <div className="mb-8">
         <label className="block text-sm font-medium text-gray-300 mb-4">
-          VocÃª jÃ¡ usa alguma ferramenta de IA?
+          Você já usa alguma ferramenta de IA?
         </label>
         <div className="grid gap-3">
           {usoOptions.map((option) => {
