@@ -5,7 +5,7 @@ export default function Step1({ data, onChange, config }) {
   const niveis = config?.nivel_options || [];
   const tamanhos = config?.tamanho_options || [];
 
-  const title = config?.step1_title || 'Quem Ã© vocÃª';
+  const title = config?.step1_title || 'Entendendo quem é você';
   const subtitle = config?.step1_subtitle || 'Conte um pouco sobre seu perfil profissional';
 
   return (
