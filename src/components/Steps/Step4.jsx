@@ -2,10 +2,10 @@
 
 export default function Step4({ data, onChange, config }) {
   const options = config?.expectativas_options || [];
-  const title = config?.step4_title || 'O que vocÃª busca';
+  const title = config?.step4_title || 'O que você busca';
   const subtitle =
     config?.step4_subtitle ||
-    'O que vocÃª mais gostaria de conseguir com IA? (mÃ¡ximo 3)';
+    'O que você mais gostaria de conseguir com IA? (mÃ¡ximo 3)';
 
   const selected = data.expectativas_ia || [];
 
