@@ -14,8 +14,8 @@ import Step4 from '@/components/Steps/Step4';
 // ============================
 function Landing({ config, onStart }) {
   const title = config?.landing_title || 'Descubra como a IA pode transformar seu dia a dia profissional';
-  const subtitle = config?.landing_subtitle || 'Responda 4 perguntas rÃ¡pidas e receba um diagnÃ³stico personalizado com ferramentas e casos de uso prontos para aplicar';
-  const cta = config?.landing_cta || 'Fazer meu diagnÃ³stico gratuito';
+  const subtitle = config?.landing_subtitle || 'Responda 4 perguntas rápidas e receba um diagnóstico personalizado com ferramentas e casos de uso prontos para aplicar';
+  const cta = config?.landing_cta || 'Fazer meu diagnóstico gratuito';
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
@@ -28,7 +28,7 @@ function Landing({ config, onStart }) {
             </svg>
           </div>
           <p className="text-accent-purple-light text-sm font-medium tracking-widest uppercase mb-4">
-            DiagnÃ³stico IA â por Destrava Lab
+            Diagnóstico IA — por Destrava Lab
           </p>
         </div>
 
@@ -253,7 +253,7 @@ export default function HomePage() {
             onClick={() => { setPhase('form'); setStep(4); }}
             className="btn-secondary ml-3"
           >
-            Voltar ao formulÃ¡rio
+            Voltar ao formulário
           </button>
         </div>
       </div>
@@ -274,7 +274,7 @@ export default function HomePage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <span className="font-semibold text-white text-sm">DiagnÃ³stico IA</span>
+            <span className="font-semibold text-white text-sm">Diagnóstico IA</span>
           </div>
           <span className="text-gray-500 text-sm">Etapa {step} de 4</span>
         </div>
@@ -314,7 +314,7 @@ export default function HomePage() {
             className="btn-primary"
           >
             <span className="flex items-center gap-1">
-              {step === 4 ? 'Gerar meu diagnÃ³stico' : 'Continuar'}
+              {step === 4 ? 'Gerar meu diagnóstico' : 'Continuar'}
               {step < 4 && (
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
