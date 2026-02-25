@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 
 const defaultMessages = [
   'Analisando seu perfil profissional...',
-  'Identificando oportunidades de IA para sua Ã¡rea...',
-  'Mapeando ferramentas ideais para vocÃª...',
+  'Identificando oportunidades de IA para sua área...',
+  'Mapeando ferramentas ideais para você...',
   'Montando seu plano personalizado de 30 dias...',
-  'Quase lÃ¡! Finalizando seu diagnÃ³stico...',
+  'Quase lá! Finalizando seu diagnóstico...',
 ];
 
 export default function LoadingDiagnostico({ messages }) {
@@ -75,7 +75,7 @@ export default function LoadingDiagnostico({ messages }) {
         </p>
 
         <p className="text-sm text-gray-500 mt-4">
-          Isso pode levar atÃ© 30 segundos
+          Isso pode levar até 30 segundos
         </p>
       </div>
     </div>
