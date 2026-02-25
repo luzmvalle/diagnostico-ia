@@ -5,7 +5,7 @@ export default function Step1({ data, onChange, config }) {
   const niveis = config?.nivel_options || [];
   const tamanhos = config?.tamanho_options || [];
 
-  const title = config?.step1_title || 'Entendendo quem é você';
+  const title = config?.step1_title || 'Quem é você';
   const subtitle = config?.step1_subtitle || 'Conte um pouco sobre seu perfil profissional';
 
   return (
@@ -32,7 +32,7 @@ export default function Step1({ data, onChange, config }) {
         {/* Cargo */}
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
-            Cargo / FunÃ§Ã£o
+            Cargo / Função
           </label>
           <input
             type="text"
@@ -44,10 +44,10 @@ export default function Step1({ data, onChange, config }) {
           />
         </div>
 
-        {/* Ãrea de atuaÃ§Ã£o */}
+        {/* Área de atuação */}
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
-            Ãrea de atuaÃ§Ã£o
+            Área de atuação
           </label>
           <div className="relative">
             <select
@@ -55,7 +55,7 @@ export default function Step1({ data, onChange, config }) {
               value={data.area}
               onChange={(e) => onChange({ area: e.target.value })}
             >
-              <option value="">Selecione sua Ã¡rea</option>
+              <option value="">Selecione sua área</option>
               {areas.map((area) => (
                 <option key={area} value={area}>
                   {area}
@@ -70,10 +70,10 @@ export default function Step1({ data, onChange, config }) {
           </div>
         </div>
 
-        {/* NÃ­vel hierÃ¡rquico */}
+        {/* Nível hierárquico */}
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
-            NÃ­vel hierÃ¡rquico
+            Nível hierárquico
           </label>
           <div className="relative">
             <select
@@ -81,7 +81,7 @@ export default function Step1({ data, onChange, config }) {
               value={data.nivel_hierarquico}
               onChange={(e) => onChange({ nivel_hierarquico: e.target.value })}
             >
-              <option value="">Selecione seu nÃ­vel</option>
+              <option value="">Selecione seu nível</option>
               {niveis.map((nivel) => (
                 <option key={nivel} value={nivel}>
                   {nivel}
