@@ -34,10 +34,10 @@ export default function ResultadoPage() {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">Nenhum diagnÃ³stico encontrado</h1>
-          <p className="text-gray-400 mb-6">FaÃ§a o questionÃ¡rio primeiro para receber seu diagnÃ³stico.</p>
+          <h1 className="text-2xl font-bold text-white mb-4">Nenhum diagnóstico encontrado</h1>
+          <p className="text-gray-400 mb-6">Faça o questionário primeiro para receber seu diagnóstico.</p>
           <a href="/" className="btn-primary inline-block">
-            Fazer diagnÃ³stico
+            Fazer diagnóstico
           </a>
         </div>
       </div>
@@ -47,7 +47,7 @@ export default function ResultadoPage() {
   const maturity = maturityConfig[diagnostico.nivel_maturidade_ia] || maturityConfig.Iniciante;
 
   const shareText = encodeURIComponent(
-    `Acabei de descobrir meu potencial com IA: score ${diagnostico.score_potencial_ia}/100! ð\n\nFiz um diagnÃ³stico gratuito e recebi um plano personalizado com ${diagnostico.casos_de_uso?.length || 0} casos de uso prÃ¡ticos para minha Ã¡rea.\n\nFaÃ§a o seu tambÃ©m:`
+    `Acabei de descobrir meu potencial com IA: score ${diagnostico.score_potencial_ia}/100! 🚀\n\nFiz um diagnóstico gratuito e recebi um plano personalizado com ${diagnostico.casos_de_uso?.length || 0} casos de uso práticos para minha área.\n\nFaça o seu também:`
   );
 
   return (
@@ -62,7 +62,7 @@ export default function ResultadoPage() {
               </svg>
             </div>
             <span className="font-bold text-white">
-              DiagnÃ³stico IA <span className="text-gray-500 font-normal text-sm">por Destrava Lab</span>
+              Diagnóstico IA <span className="text-gray-500 font-normal text-sm">por Destrava Lab</span>
             </span>
           </div>
           <a href="/" className="btn-secondary text-sm py-1.5 px-4">
@@ -84,7 +84,7 @@ export default function ResultadoPage() {
             {/* Info */}
             <div className="flex-1 text-center md:text-left">
               <h1 className="text-2xl md:text-3xl font-bold text-white mb-3">
-                {nome ? `OlÃ¡, ${nome}!` : 'Seu DiagnÃ³stico'}
+                {nome ? `Olá, ${nome}!` : 'Seu Diagnóstico'}
               </h1>
               <p className="text-gray-300 text-lg mb-4 leading-relaxed">
                 {diagnostico.resumo_perfil}
@@ -118,7 +118,7 @@ export default function ResultadoPage() {
           </div>
         </section>
 
-        {/* Plano de AÃ§Ã£o */}
+        {/* Plano de Ação */}
         <section className="mb-12">
           <PlanoAcao plano={diagnostico.plano_acao_30_dias} />
         </section>
@@ -155,7 +155,7 @@ export default function ResultadoPage() {
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
-              Refazer diagnÃ³stico
+              Refazer diagnóstico
             </a>
           </div>
         </section>
@@ -173,7 +173,7 @@ export default function ResultadoPage() {
           >
             Destrava Lab
           </a>
-          {' '}â IA prÃ¡tica para profissionais
+          {' '}— IA prática para profissionais
         </p>
       </footer>
     </div>
