@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Admin â DiagnÃ³stico IA',
+  title: 'Admin — Diagnóstico IA',
   robots: 'noindex, nofollow',
 };
 
