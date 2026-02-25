@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 
 // ============================
-// TAB: MÃTRICAS
+// TAB: MÉTRICAS
 // ============================
 function MetricasTab({ token }) {
   const [metrics, setMetrics] = useState(null);
@@ -28,8 +28,8 @@ function MetricasTab({ token }) {
     load();
   }, [token]);
 
-  if (loading) return <div className="text-gray-400 py-8 text-center">Carregando mÃ©tricas...</div>;
-  if (!metrics) return <div className="text-red-400 py-8 text-center">Erro ao carregar mÃ©tricas</div>;
+  if (loading) return <div className="text-gray-400 py-8 text-center">Carregando métricas...</div>;
+  if (!metrics) return <div className="text-red-400 py-8 text-center">Erro ao carregar métricas</div>;
 
   const funnelLabels = [
     { key: 'step_0', label: 'Landing' },
@@ -37,7 +37,7 @@ function MetricasTab({ token }) {
     { key: 'step_2', label: 'Etapa 2' },
     { key: 'step_3', label: 'Etapa 3' },
     { key: 'step_4', label: 'Etapa 4' },
-    { key: 'completed', label: 'DiagnÃ³stico' },
+    { key: 'completed', label: 'Diagnóstico' },
   ];
 
   const maxFunnel = Math.max(...funnelLabels.map((f) => metrics.funnel?.[f.key] || 0), 1);
@@ -57,17 +57,17 @@ function MetricasTab({ token }) {
         </div>
         <div className="card p-5 text-center">
           <p className="text-3xl font-bold text-accent-green">{metrics.totalDiagnosticos}</p>
-          <p className="text-gray-400 text-sm mt-1">DiagnÃ³sticos</p>
+          <p className="text-gray-400 text-sm mt-1">Diagnósticos</p>
         </div>
         <div className="card p-5 text-center">
           <p className="text-3xl font-bold text-accent-purple-light">{metrics.taxaConversao}%</p>
-          <p className="text-gray-400 text-sm mt-1">Taxa de ConversÃ£o</p>
+          <p className="text-gray-400 text-sm mt-1">Taxa de Conversão</p>
         </div>
       </div>
 
       {/* Funnel */}
       <div className="card p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Funil de ConversÃ£o</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">Funil de Conversão</h3>
         <div className="space-y-3">
           {funnelLabels.map((f) => {
             const val = metrics.funnel?.[f.key] || 0;
@@ -91,9 +91,9 @@ function MetricasTab({ token }) {
 
       {/* Per Day */}
       <div className="card p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">DiagnÃ³sticos por Dia (Ãºltimos 30 dias)</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">Diagnósticos por Dia (últimos 30 dias)</h3>
         {Object.keys(metrics.perDay || {}).length === 0 ? (
-          <p className="text-gray-500 text-sm">Nenhum dado ainda</p>
+          <p className="text-gray-500 text-sm">Renhum dado ainda</p>
         ) : (
           <div className="flex items-end gap-1 h-32 overflow-x-auto">
             {Object.entries(metrics.perDay).map(([day, count]) => {
@@ -119,7 +119,7 @@ function MetricasTab({ token }) {
       {/* By Area + By Nivel */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="card p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Por Ãrea</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">Por Área</h3>
           <div className="space-y-2">
             {areaEntries.map(([area, count]) => (
               <div key={area} className="flex items-center gap-2">
@@ -137,7 +137,7 @@ function MetricasTab({ token }) {
         </div>
 
         <div className="card p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Por NÃ­vel</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">Por Nível</h3>
           <div className="space-y-2">
             {nivelEntries.map(([nivel, count]) => (
               <div key={nivel} className="flex items-center gap-2">
@@ -207,20 +207,20 @@ function RespostasTab({ token }) {
       {/* Filters */}
       <div className="card p-4 mb-4 flex flex-wrap gap-3 items-end">
         <div>
-          <label className="block text-xs text-gray-400 mb-1">Ãrea</label>
+          <label className="block text-xs text-gray-400 mb-1">Área</label>
           <select
             className="select-field text-sm py-1.5"
             value={filters.area}
             onChange={(e) => { setFilters({ ...filters, area: e.target.value }); setPage(1); }}
           >
             <option value="">Todas</option>
-            {['Marketing','Vendas','Financeiro','RH','OperaÃ§Ãµes','JurÃ­dico','Produto','Consultoria','SaÃºde','EducaÃ§Ã£o','Outro'].map((a) => (
+            {['Marketing','Vendas','Financeiro','RH','Operações','Jurídico','Produto','Consultoria','Saúde','Educação','Outro'].map((a) => (
               <option key={a} value={a}>{a}</option>
             ))}
           </select>
         </div>
         <div>
-          <label className="block text-xs text-gray-400 mb-1">NÃ­vel</label>
+          <label className="block text-xs text-gray-400 mb-1">Nível</label>
           <select
             className="select-field text-sm py-1.5"
             value={filters.nivel}
@@ -237,7 +237,7 @@ function RespostasTab({ token }) {
           <input type="date" className="input-field text-sm py-1.5" value={filters.from} onChange={(e) => { setFilters({ ...filters, from: e.target.value }); setPage(1); }} />
         </div>
         <div>
-          <label className="block text-xs text-gray-400 mb-1">AtÃ©</label>
+          <label className="block text-xs text-gray-400 mb-1">Até</label>
           <input type="date" className="input-field text-sm py-1.5" value={filters.to} onChange={(e) => { setFilters({ ...filters, to: e.target.value }); setPage(1); }} />
         </div>
         <button onClick={handleExport} className="btn-secondary text-sm py-1.5 ml-auto">
@@ -252,7 +252,7 @@ function RespostasTab({ token }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-700">
-              {['Data', 'Nome', 'Cargo', 'Ãrea', 'NÃ­vel', 'Maturidade', 'Score'].map((h) => (
+              {['Data', 'Nome', 'Cargo', 'Área', 'Nível', 'Maturidade', 'Score'].map((h) => (
                 <th key={h} className="text-left py-3 px-3 text-gray-400 font-medium">{h}</th>
               ))}
             </tr>
@@ -276,8 +276,8 @@ function RespostasTab({ token }) {
                     <td className="py-2.5 px-3 text-gray-300">{r.cargo}</td>
                     <td className="py-2.5 px-3"><span className="badge-purple">{r.area}</span></td>
                     <td className="py-2.5 px-3 text-gray-300">{r.nivel_hierarquico}</td>
-                    <td className="py-2.5 px-3 text-gray-300">{diag.nivel_maturidade_ia || 'â'}</td>
-                    <td className="py-2.5 px-3 font-semibold text-accent-green">{diag.score_potencial_ia || 'â'}</td>
+                    <td className="py-2.5 px-3 text-gray-300">{diag.nivel_maturidade_ia || '—'}</td>
+                    <td className="py-2.5 px-3 font-semibold text-accent-green">{diag.score_potencial_ia || '—'}</td>
                   </tr>
                 );
               })
@@ -294,7 +294,7 @@ function RespostasTab({ token }) {
           </button>
           <span className="text-gray-400 text-sm">{page} / {totalPages}</span>
           <button className="btn-secondary text-sm py-1 px-3" disabled={page >= totalPages} onClick={() => setPage(page + 1)}>
-            PrÃ³xima
+            Próxima
           </button>
         </div>
       )}
@@ -313,8 +313,8 @@ function RespostasTab({ token }) {
             </div>
             <div className="space-y-3 text-sm">
               <div><span className="text-gray-400">Cargo:</span> <span className="text-white ml-2">{selectedResponse.cargo}</span></div>
-              <div><span className="text-gray-400">Ãrea:</span> <span className="text-white ml-2">{selectedResponse.area}</span></div>
-              <div><span className="text-gray-400">NÃ­vel:</span> <span className="text-white ml-2">{selectedResponse.nivel_hierarquico}</span></div>
+              <div><span className="text-gray-400">Área:</span> <span className="text-white ml-2">{selectedResponse.area}</span></div>
+              <div><span className="text-gray-400">Nível:</span> <span className="text-white ml-2">{selectedResponse.nivel_hierarquico}</span></div>
               <div><span className="text-gray-400">Empresa:</span> <span className="text-white ml-2">{selectedResponse.tamanho_empresa}</span></div>
               <div><span className="text-gray-400">Uso IA:</span> <span className="text-white ml-2">{selectedResponse.uso_ia_atual}</span></div>
               <div><span className="text-gray-400">Atividades:</span> <span className="text-white ml-2">{(selectedResponse.atividades_tempo || []).join(', ')}</span></div>
@@ -322,10 +322,10 @@ function RespostasTab({ token }) {
               <div><span className="text-gray-400">Expectativas:</span> <span className="text-white ml-2">{(selectedResponse.expectativas_ia || []).join(', ')}</span></div>
               <hr className="border-gray-700" />
               <div><span className="text-gray-400">Tokens:</span> <span className="text-white ml-2">{selectedResponse.tokens_usados}</span></div>
-              <div><span className="text-gray-400">Tempo de geraÃ§Ã£o:</span> <span className="text-white ml-2">{selectedResponse.tempo_geracao_ms}ms</span></div>
+              <div><span className="text-gray-400">Tempo de geração:</span> <span className="text-white ml-2">{selectedResponse.tempo_geracao_ms}ms</span></div>
               <hr className="border-gray-700" />
               <div>
-                <span className="text-gray-400 block mb-2">DiagnÃ³stico completo:</span>
+                <span className="text-gray-400 block mb-2">Diagnóstico completo:</span>
                 <pre className="bg-dark-900 rounded-xl p-4 text-xs text-gray-300 overflow-x-auto max-h-96">
                   {JSON.stringify(selectedResponse.diagnostico_json, null, 2)}
                 </pre>
@@ -339,7 +339,7 @@ function RespostasTab({ token }) {
 }
 
 // ============================
-// TAB: CONFIGURAÃÃES
+// TAB: CONFIGURAÇÕES
 // ============================
 function ConfigTab({ token }) {
   const [configs, setConfigs] = useState([]);
@@ -394,12 +394,12 @@ function ConfigTab({ token }) {
     }
   }
 
-  if (loading) return <div className="text-gray-400 py-8 text-center">Carregando configuraÃ§Ãµes...</div>;
+  if (loading) return <div className="text-gray-400 py-8 text-center">Carregando configurações...</div>;
 
   return (
     <div className="space-y-4">
       <p className="text-gray-400 text-sm mb-4">
-        Edite os textos e opÃ§Ãµes do questionÃ¡rio. Para arrays, use formato JSON: [&quot;item1&quot;, &quot;item2&quot;]
+        Edite os textos e opções do questionário. Para arrays, use formato JSON: [&quot;item1&quot;, &quot;item2&quot;]
       </p>
 
       {configs.map((c) => {
@@ -472,9 +472,9 @@ export default function AdminPage() {
   if (!session) return null;
 
   const tabs = [
-    { id: 'metricas', label: 'MÃ©tricas', icon: 'ð' },
-    { id: 'respostas', label: 'Respostas', icon: 'ð' },
-    { id: 'config', label: 'ConfiguraÃ§Ãµes', icon: 'âï¸' },
+    { id: 'metricas', label: 'Métricas', icon: '📊' },
+    { id: 'respostas', label: 'Respostas', icon: '📋' },
+    { id: 'config', label: 'Configurações', icon: '⚙️' },
   ];
 
   return (
@@ -488,7 +488,7 @@ export default function AdminPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <span className="font-bold text-white text-sm">Admin â DiagnÃ³stico IA</span>
+            <span className="font-bold text-white text-sm">Admin — Diagnóstico IA</span>
           </div>
           <button onClick={handleLogout} className="text-gray-400 text-sm hover:text-white transition-colors">
             Sair
