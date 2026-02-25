@@ -8,7 +8,7 @@ export default function CasoDeUsoCard({ caso, index }) {
   const impactoBadge =
     caso.impacto === 'Alto' ? 'badge-green' : 'badge-yellow';
   const facilidadeBadge =
-    caso.facilidade === 'FÃ¡cil'
+    caso.facilidade === 'Fácil'
       ? 'badge-green'
       : caso.facilidade === 'Moderado'
       ? 'badge-purple'
@@ -44,7 +44,7 @@ export default function CasoDeUsoCard({ caso, index }) {
         onClick={() => setExpanded(!expanded)}
         className="text-accent-purple-light text-sm font-medium hover:text-accent-purple transition-colors flex items-center gap-1"
       >
-        {expanded ? 'Ver menos' : 'Ver exemplo prÃ¡tico e ferramentas'}
+        {expanded ? 'Ver menos' : 'Ver exemplo prático e ferramentas'}
         <svg
           className={`w-4 h-4 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
           fill="none"
@@ -58,10 +58,10 @@ export default function CasoDeUsoCard({ caso, index }) {
       {/* Expanded content */}
       {expanded && (
         <div className="mt-4 pt-4 border-t border-gray-700/50 animate-fade-in">
-          {/* Exemplo prÃ¡tico */}
+          {/* Exemplo prático */}
           <div className="mb-5">
             <h4 className="text-sm font-semibold text-accent-green mb-2">
-              Como aplicar na prÃ¡tica:
+              Como aplicar na prática:
             </h4>
             <p className="text-gray-300 text-sm leading-relaxed bg-dark-700/50 rounded-xl p-4">
               {caso.exemplo_pratico}
