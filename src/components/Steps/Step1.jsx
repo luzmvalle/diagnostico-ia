@@ -44,7 +44,7 @@ export default function Step1({ data, onChange, config }) {
           />
         </div>
 
-        {/* â°¤area de atuaÃ§Ã£o  */}
+        {/* Ãrea de atuaÃ§Ã£o */}
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Ãrea de atuaÃ§Ã£o
@@ -70,7 +70,7 @@ export default function Step1({ data, onChange, config }) {
           </div>
         </div>
 
-        {{/* NÃ­vel hierÃ¡rquico  */}
+        {/* NÃ­vel hierÃ¡rquico */}
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
             NÃ­vel hierÃ¡rquico
@@ -96,7 +96,7 @@ export default function Step1({ data, onChange, config }) {
           </div>
         </div>
 
-        {/* Tamanho da empresa  */}
+        {/* Tamanho da empresa */}
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Tamanho da empresa
