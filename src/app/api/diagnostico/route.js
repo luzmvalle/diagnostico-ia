@@ -29,7 +29,7 @@ export async function POST(request) {
     for (const field of required) {
       if (!body[field]) {
         return NextResponse.json(
-          { error: `Campo obrigatÃ³rio: ${field}` },
+          { error: `Campo obrigatório: ${field}` },
           { status: 400 }
         );
       }
@@ -80,7 +80,7 @@ export async function POST(request) {
 
     if (ipCount && ipCount >= 3) {
       return NextResponse.json(
-        { error: 'Limite atingido. VocÃª pode gerar atÃ© 3 diagnÃ³sticos a cada 24 horas.' },
+        { error: 'Limite atingido. Você pode gerar até 3 diagnósticos a cada 24 horas.' },
         { status: 429 }
       );
     }
@@ -105,7 +105,7 @@ export async function POST(request) {
       } catch (secondErr) {
         console.error('Gemini retry failed:', secondErr.message);
         return NextResponse.json(
-          { error: 'Erro ao gerar diagnÃ³stico. Por favor, tente novamente.' },
+          { error: 'Erro ao gerar diagnóstico. Por favor, tente novamente.' },
           { status: 502 }
         );
       }
@@ -137,7 +137,7 @@ export async function POST(request) {
     }
 
     console.log(
-      `[DiagnÃ³stico] tokens=${result.tokens_usados} tempo=${result.tempo_geracao_ms}ms area=${body.area}`
+      `[Diagnóstico] tokens=${result.tokens_usados} tempo=${result.tempo_geracao_ms}ms area=${body.area}`
     );
 
     return NextResponse.json({
