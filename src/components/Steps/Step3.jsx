@@ -27,8 +27,8 @@ export default function Step3({ data, onChange, config }) {
           VocÃª jÃ¡ usa alguma ferramenta de IA?
         </label>
         <div className="grid gap-3">
-          {uso Options.map((option) => {
-            const isActive = data.uso_ia_atual === option,
+          {usoOptions.map((option) => {
+            const isActive = data.uso_ia_atual === option;
             return (
               <button
                 key={option}
@@ -52,6 +52,7 @@ export default function Step3({ data, onChange, config }) {
             );
           })}
         </div>
+      </div>
 
       {/* Barreiras */}
       <div>
