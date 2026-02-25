@@ -4,7 +4,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Supabase env vars missing â some features will be disabled');
+  console.warn('Supabase env vars missing — some features will be disabled');
 }
 
 export const supabase = createClient(
