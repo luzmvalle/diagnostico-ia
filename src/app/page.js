@@ -70,13 +70,40 @@ function Landing({ config, onStart }) {
 }
 
 // ============================
+// DEFAULT CONFIG (fallback if API fails)
+// ============================
+const DEFAULT_CONFIG = {
+  step1_title: 'Quem é você',
+  step1_subtitle: 'Conte um pouco sobre seu perfil profissional',
+  area_options: ['Marketing', 'Vendas', 'Financeiro', 'RH', 'Operações', 'Jurídico', 'Produto', 'Consultoria', 'Saúde', 'Educação', 'Outro'],
+  nivel_options: ['Analista/Especialista', 'Coordenador', 'Gerente', 'Diretor', 'C-Level'],
+  tamanho_options: ['1-50 funcionários', '51-200 funcionários', '201-1000 funcionários', '1000+ funcionários'],
+  step2_title: 'Sua rotina',
+  step2_subtitle: 'Quais dessas atividades tomam mais seu tempo? (selecione pelo menos 2)',
+  atividades_options: ['Escrever documentos, emails, relatórios', 'Analisar dados e planilhas', 'Criar apresentações', 'Pesquisar informações', 'Atender clientes/stakeholders', 'Organizar e planejar projetos', 'Revisar e aprovar materiais', 'Reuniões e alinhamentos', 'Gestão de pessoas', 'Processos repetitivos/manuais'],
+  step3_title: 'Sua relação com IA',
+  step3_subtitle: 'Queremos entender seu momento atual com inteligência artificial',
+  uso_ia_options: ['Não uso nenhuma', 'Uso de vez em quando', 'Uso regularmente'],
+  barreiras_options: ['Não sei por onde começar', 'Não sei quais ferramentas usar', 'Tenho medo de errar ou gerar resultados ruins', 'Minha empresa não permite ou não incentiva', 'Não vejo aplicação pro que eu faço', 'Falta de tempo pra aprender'],
+  step4_title: 'O que você busca',
+  step4_subtitle: 'O que você mais gostaria de conseguir com IA? (máximo 3)',
+  expectativas_options: ['Economizar tempo em tarefas repetitivas', 'Melhorar a qualidade do que produzo', 'Tomar decisões mais embasadas', 'Automatizar processos', 'Ser mais criativo', 'Me destacar profissionalmente'],
+  landing_title: 'Descubra como a IA pode transformar seu dia a dia profissional',
+  landing_subtitle: 'Responda 4 perguntas rápidas e receba um diagnóstico personalizado com ferramentas e casos de uso prontos para aplicar',
+  landing_cta: 'Fazer meu diagnóstico gratuito',
+  loading_messages: ['Analisando seu perfil profissional...', 'Identificando oportunidades de IA para sua área...', 'Mapeando ferramentas ideais para você...', 'Montando seu plano personalizado de 30 dias...', 'Quase lá! Finalizando seu diagnóstico...'],
+  footer_text: 'Feito por Destrava Lab — IA prática para profissionais',
+  footer_youtube: 'https://youtube.com/@destravalabai',
+};
+
+// ============================
 // MAIN PAGE
 // ============================
 export default function HomePage() {
   const router = useRouter();
   const [phase, setPhase] = useState('landing'); // landing | form | loading | error
   const [step, setStep] = useState(1);
-  const [config, setConfig] = useState({});
+  const [config, setConfig] = useState(DEFAULT_CONFIG);
   const [visitId, setVisitId] = useState(null);
   const [error, setError] = useState('');
   const sessionIdRef = useRef(null);
@@ -98,14 +125,16 @@ export default function HomePage() {
     async function loadConfig() {
       try {
         const res = await fetch('/api/admin/config');
+        if (!res.ok) return; // Keep defaults
         const data = await res.json();
+        if (!Array.isArray(data)) return; // Keep defaults
         const map = {};
-        (data || []).forEach((c) => {
+        data.forEach((c) => {
           map[c.id] = c.value;
         });
-        setConfig(map);
+        setConfig((prev) => ({ ...prev, ...map }));
       } catch {
-        // Use defaults
+        // Keep defaults
       }
     }
     loadConfig();
