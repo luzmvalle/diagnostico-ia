@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { createServiceClient } from '@/lib/supabase-server';
 import { generateDiagnostico } from '@/lib/gemini';
 import { createHash } from 'crypto';
 
@@ -7,6 +6,15 @@ export const dynamic = 'force-dynamic';
 
 function hashIP(ip) {
   return createHash('sha256').update(ip || 'unknown').digest('hex').slice(0, 16);
+}
+
+function getSupabase() {
+  try {
+    const { createServiceClient } = require('@/lib/supabase-server');
+    return createServiceClient();
+  } catch {
+    return null;
+  }
 }
 
 export async function POST(request) {
@@ -56,41 +64,38 @@ export async function POST(request) {
       );
     }
 
-    // Rate limiting: max 3 per IP per 24h
+    // Rate limiting and Supabase - optional
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
     const ipHash = hashIP(ip);
+    const supabase = getSupabase();
 
-    const supabase = createServiceClient();
+    if (supabase) {
+      try {
+        const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
-    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+        const { count: ipCount } = await supabase
+          .from('visits')
+          .select('id', { count: 'exact', head: true })
+          .eq('ip_hash', ipHash)
+          .eq('completed', true)
+          .gte('created_at', twentyFourHoursAgo);
 
-    const { count } = await supabase
-      .from('responses')
-      .select('id', { count: 'exact', head: true })
-      .gte('created_at', twentyFourHoursAgo)
-      .eq('visit_id', body.visit_id || '');
+        if (ipCount && ipCount >= 3) {
+          return NextResponse.json(
+            { error: 'Limite atingido. Você pode gerar até 3 diagnósticos a cada 24 horas.' },
+            { status: 429 }
+          );
+        }
 
-    // Also check by IP hash in visits
-    const { count: ipCount } = await supabase
-      .from('visits')
-      .select('id', { count: 'exact', head: true })
-      .eq('ip_hash', ipHash)
-      .eq('completed', true)
-      .gte('created_at', twentyFourHoursAgo);
-
-    if (ipCount && ipCount >= 3) {
-      return NextResponse.json(
-        { error: 'Limite atingido. Você pode gerar até 3 diagnósticos a cada 24 horas.' },
-        { status: 429 }
-      );
-    }
-
-    // Update visit with IP hash
-    if (body.visit_id) {
-      await supabase
-        .from('visits')
-        .update({ ip_hash: ipHash, completed: true, current_step: 5 })
-        .eq('id', body.visit_id);
+        if (body.visit_id) {
+          await supabase
+            .from('visits')
+            .update({ ip_hash: ipHash, completed: true, current_step: 5 })
+            .eq('id', body.visit_id);
+        }
+      } catch (dbErr) {
+        console.error('Supabase pre-check error (continuing):', dbErr.message);
+      }
     }
 
     // Generate diagnostic with retry
@@ -99,7 +104,6 @@ export async function POST(request) {
       result = await generateDiagnostico(body);
     } catch (firstErr) {
       console.error('Gemini first attempt failed:', firstErr.message);
-      // Retry once
       try {
         result = await generateDiagnostico(body);
       } catch (secondErr) {
@@ -111,29 +115,38 @@ export async function POST(request) {
       }
     }
 
-    // Save response
-    const { data: savedResponse, error: saveError } = await supabase
-      .from('responses')
-      .insert({
-        visit_id: body.visit_id || null,
-        nome: body.nome,
-        cargo: body.cargo,
-        area: body.area,
-        nivel_hierarquico: body.nivel_hierarquico,
-        tamanho_empresa: body.tamanho_empresa,
-        atividades_tempo: body.atividades_tempo,
-        uso_ia_atual: body.uso_ia_atual,
-        barreiras_ia: body.barreiras_ia,
-        expectativas_ia: body.expectativas_ia,
-        diagnostico_json: result.diagnostico,
-        tokens_usados: result.tokens_usados,
-        tempo_geracao_ms: result.tempo_geracao_ms,
-      })
-      .select('id')
-      .single();
+    // Save response - optional
+    let savedResponse = null;
+    if (supabase) {
+      try {
+        const { data, error: saveError } = await supabase
+          .from('responses')
+          .insert({
+            visit_id: body.visit_id || null,
+            nome: body.nome,
+            cargo: body.cargo,
+            area: body.area,
+            nivel_hierarquico: body.nivel_hierarquico,
+            tamanho_empresa: body.tamanho_empresa,
+            atividades_tempo: body.atividades_tempo,
+            uso_ia_atual: body.uso_ia_atual,
+            barreiras_ia: body.barreiras_ia,
+            expectativas_ia: body.expectativas_ia,
+            diagnostico_json: result.diagnostico,
+            tokens_usados: result.tokens_usados,
+            tempo_geracao_ms: result.tempo_geracao_ms,
+          })
+          .select('id')
+          .single();
 
-    if (saveError) {
-      console.error('Error saving response:', saveError);
+        if (saveError) {
+          console.error('Error saving response:', saveError);
+        } else {
+          savedResponse = data;
+        }
+      } catch (saveErr) {
+        console.error('Supabase save error (continuing):', saveErr.message);
+      }
     }
 
     console.log(
@@ -142,7 +155,7 @@ export async function POST(request) {
 
     return NextResponse.json({
       diagnostico: result.diagnostico,
-      response_id: savedResponse?.id,
+      response_id: savedResponse?.id || null,
     });
   } catch (err) {
     console.error('Diagnostic route error:', err);
