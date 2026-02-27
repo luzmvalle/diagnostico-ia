@@ -1,26 +1,94 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import ScoreCircular from '@/components/Resultado/ScoreCircular';
 import CasoDeUsoCard from '@/components/Resultado/CasoDeUsoCard';
 import PlanoAcao from '@/components/Resultado/PlanoAcao';
 
 const maturityConfig = {
-  Iniciante: { color: 'text-blue-400', bg: 'bg-blue-500/20', border: 'border-blue-500/30' },
-  Explorador: { color: 'text-accent-purple-light', bg: 'bg-accent-purple/20', border: 'border-accent-purple/30' },
-  Praticante: { color: 'text-accent-green', bg: 'bg-accent-green/20', border: 'border-accent-green/30' },
+  'Curioso(a)': { color: 'text-blue-400', bg: 'bg-blue-500/20', border: 'border-blue-500/30', emoji: '' },
+  'Explorador(a)': { color: 'text-accent-purple-light', bg: 'bg-accent-purple/20', border: 'border-accent-purple/30', emoji: '' },
+  'Praticante': { color: 'text-yellow-400', bg: 'bg-yellow-500/20', border: 'border-yellow-500/30', emoji: '' },
+  'Integrador(a)': { color: 'text-accent-green', bg: 'bg-accent-green/20', border: 'border-accent-green/30', emoji: '' },
+  'Estrategista': { color: 'text-pink-400', bg: 'bg-pink-500/20', border: 'border-pink-500/30', emoji: '' },
+  // Backwards compatibility
+  'Iniciante': { color: 'text-blue-400', bg: 'bg-blue-500/20', border: 'border-blue-500/30', emoji: '' },
+  'Explorador': { color: 'text-accent-purple-light', bg: 'bg-accent-purple/20', border: 'border-accent-purple/30', emoji: '' },
 };
+
+function ScoreBar({ label, value, color }) {
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-1">
+        <span className="text-sm text-gray-400">{label}</span>
+        <span className={`text-sm font-bold ${color}`}>{value}/100</span>
+      </div>
+      <div className="h-2 bg-dark-600 rounded-full overflow-hidden">
+        <div
+          className={`h-full rounded-full transition-all duration-1000 ease-out ${
+            value >= 70 ? 'bg-accent-green' : value >= 40 ? 'bg-accent-purple' : 'bg-yellow-500'
+          }`}
+          style={{ width: `${value}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function DicaFerramentaCard({ dica }) {
+  const [copied, setCopied] = useState(false);
+
+  async function copyPrompt() {
+    try {
+      await navigator.clipboard.writeText(dica.prompt_exemplo || '');
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }
+
+  return (
+    <div className="card p-4">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="badge bg-accent-purple/20 text-accent-purple-light text-xs">{dica.ferramenta}</span>
+        <span className="text-xs text-gray-500">Você já usa</span>
+      </div>
+      <p className="text-gray-300 text-sm mb-3">{dica.dica}</p>
+      {dica.prompt_exemplo && (
+        <div className="bg-dark-700/80 rounded-lg p-3 border border-gray-600/30 relative">
+          <p className="text-gray-200 text-xs leading-relaxed whitespace-pre-wrap font-mono pr-16">
+            {dica.prompt_exemplo}
+          </p>
+          <button
+            onClick={copyPrompt}
+            className={`absolute top-2 right-2 text-xs px-2 py-1 rounded transition-all ${
+              copied ? 'bg-accent-green/20 text-accent-green' : 'bg-dark-500 text-gray-400 hover:text-white'
+            }`}
+          >
+            {copied ? 'Copiado!' : 'Copiar'}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function ResultadoPage() {
   const [diagnostico, setDiagnostico] = useState(null);
+  const [scoring, setScoring] = useState(null);
   const [nome, setNome] = useState('');
 
   useEffect(() => {
     try {
       const stored = sessionStorage.getItem('diag_resultado');
+      const storedScoring = sessionStorage.getItem('diag_scoring');
       const storedNome = sessionStorage.getItem('diag_nome');
       if (stored) {
         setDiagnostico(JSON.parse(stored));
+      }
+      if (storedScoring) {
+        setScoring(JSON.parse(storedScoring));
       }
       if (storedNome) {
         setNome(storedNome);
@@ -44,11 +112,12 @@ export default function ResultadoPage() {
     );
   }
 
-  const maturity = maturityConfig[diagnostico.nivel_maturidade_ia] || maturityConfig.Iniciante;
+  const nivel = scoring?.nivel_maturidade || diagnostico.nivel_maturidade_ia || 'Explorador(a)';
+  const maturity = maturityConfig[nivel] || maturityConfig['Explorador(a)'];
+  const nivelDescricao = scoring?.nivel_maturidade_descricao || '';
 
-  const shareText = encodeURIComponent(
-    `Acabei de descobrir meu potencial com IA: score ${diagnostico.score_potencial_ia}/100! 🚀\n\nFiz um diagnóstico gratuito e recebi um plano personalizado com ${diagnostico.casos_de_uso?.length || 0} casos de uso práticos para minha área.\n\nFaça o seu também:`
-  );
+  const casosDeUso = diagnostico.casos_de_uso || [];
+  const dicasFerramentas = diagnostico.dicas_ferramentas_atuais || [];
 
   return (
     <div className="min-h-screen pb-20">
@@ -72,34 +141,53 @@ export default function ResultadoPage() {
       </header>
 
       <main className="max-w-5xl mx-auto px-4 pt-8">
-        {/* Hero Card */}
+        {/* Hero Card — Perfil + Maturidade + Sub-scores */}
         <div className="card p-8 mb-8 animate-fade-in bg-gradient-to-br from-dark-800 to-dark-800/50 border-gray-700/30">
-          <div className="flex flex-col md:flex-row items-center gap-8">
-            {/* Score */}
-            <div className="flex-shrink-0">
-              <ScoreCircular score={diagnostico.score_potencial_ia || 0} size={160} />
-              <p className="text-center text-gray-400 text-xs mt-2">Potencial com IA</p>
-            </div>
-
-            {/* Info */}
-            <div className="flex-1 text-center md:text-left">
+          <div className="flex flex-col md:flex-row gap-8">
+            {/* Left: Info */}
+            <div className="flex-1">
               <h1 className="text-2xl md:text-3xl font-bold text-white mb-3">
                 {nome ? `Olá, ${nome}!` : 'Seu Diagnóstico'}
               </h1>
-              <p className="text-gray-300 text-lg mb-4 leading-relaxed">
+              <p className="text-gray-300 text-base mb-4 leading-relaxed">
                 {diagnostico.resumo_perfil}
               </p>
-              <div className="inline-flex items-center gap-2">
+              <div className="inline-flex items-center gap-2 mb-4">
                 <span
                   className={`badge ${maturity.bg} ${maturity.color} text-sm px-4 py-1.5 ${maturity.border} border`}
                 >
-                  {diagnostico.nivel_maturidade_ia}
+                  {nivel}
                 </span>
                 <span className="text-gray-500 text-sm">
-                  {diagnostico.casos_de_uso?.length || 0} oportunidades identificadas
+                  {casosDeUso.length} oportunidades identificadas
                 </span>
               </div>
+              {nivelDescricao && (
+                <p className="text-gray-400 text-sm leading-relaxed">{nivelDescricao}</p>
+              )}
             </div>
+
+            {/* Right: Sub-scores */}
+            {scoring && (
+              <div className="md:w-72 flex-shrink-0 space-y-4">
+                <h3 className="text-sm font-semibold text-gray-300 mb-2">Seus indicadores</h3>
+                <ScoreBar
+                  label="Potencial de automação"
+                  value={scoring.potencial_automacao || 0}
+                  color="text-accent-green"
+                />
+                <ScoreBar
+                  label="Nível de adoção atual"
+                  value={scoring.nivel_adocao || 0}
+                  color="text-accent-purple-light"
+                />
+                <ScoreBar
+                  label="Prontidão para avançar"
+                  value={scoring.prontidao || 0}
+                  color="text-blue-400"
+                />
+              </div>
+            )}
           </div>
         </div>
 
@@ -109,14 +197,31 @@ export default function ResultadoPage() {
             <svg className="w-6 h-6 text-accent-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
             </svg>
-            Seus casos de uso de IA
+            Oportunidades de IA para você
           </h2>
           <div className="grid gap-4">
-            {(diagnostico.casos_de_uso || []).map((caso, i) => (
+            {casosDeUso.map((caso, i) => (
               <CasoDeUsoCard key={i} caso={caso} index={i} />
             ))}
           </div>
         </section>
+
+        {/* Dicas para ferramentas que já usa */}
+        {dicasFerramentas.length > 0 && (
+          <section className="mb-12 animate-slide-up">
+            <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+              <svg className="w-6 h-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+              </svg>
+              Potencial não explorado nas suas ferramentas
+            </h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {dicasFerramentas.map((dica, i) => (
+                <DicaFerramentaCard key={i} dica={dica} />
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Plano de Ação */}
         <section className="mb-12">
@@ -137,20 +242,9 @@ export default function ResultadoPage() {
           </section>
         )}
 
-        {/* Action Buttons */}
+        {/* CTA */}
         <section className="text-center mb-12">
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.origin : '')}&summary=${shareText}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary inline-flex items-center justify-center gap-2"
-            >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-              </svg>
-              Compartilhar no LinkedIn
-            </a>
             <a href="/" className="btn-secondary inline-flex items-center justify-center gap-2">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -166,14 +260,14 @@ export default function ResultadoPage() {
         <p className="text-gray-500 text-sm">
           Feito por{' '}
           <a
-            href="https://youtube.com/@destravalabai"
+            href="https://youtube.com/@destravalab"
             target="_blank"
             rel="noopener noreferrer"
             className="text-accent-purple-light hover:underline"
           >
             Destrava Lab
           </a>
-          {' '}— IA prática para profissionais
+          {' '} — IA prática para profissionais
         </p>
       </footer>
     </div>

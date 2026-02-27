@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { generateDiagnostico } from '@/lib/gemini';
+import { calculateScores } from '@/lib/scoring';
 import { createHash } from 'crypto';
 
 export const dynamic = 'force-dynamic';
@@ -50,9 +51,9 @@ export async function POST(request) {
       );
     }
 
-    if (!Array.isArray(body.barreiras_ia) || body.barreiras_ia.length < 1) {
+    if (!Array.isArray(body.barreiras_ia) || body.barreiras_ia.length < 1 || body.barreiras_ia.length > 3) {
       return NextResponse.json(
-        { error: 'Selecione pelo menos 1 barreira' },
+        { error: 'Selecione entre 1 e 3 barreiras' },
         { status: 400 }
       );
     }
@@ -63,6 +64,9 @@ export async function POST(request) {
         { status: 400 }
       );
     }
+
+    // Calculate local scoring
+    const scoring = calculateScores(body);
 
     // Rate limiting and Supabase - optional
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
@@ -98,14 +102,20 @@ export async function POST(request) {
       }
     }
 
+    // Enrich body with scoring for Gemini
+    const enrichedData = {
+      ...body,
+      scoring,
+    };
+
     // Generate diagnostic with retry
     let result;
     try {
-      result = await generateDiagnostico(body);
+      result = await generateDiagnostico(enrichedData);
     } catch (firstErr) {
       console.error('Gemini first attempt failed:', firstErr.message);
       try {
-        result = await generateDiagnostico(body);
+        result = await generateDiagnostico(enrichedData);
       } catch (secondErr) {
         console.error('Gemini retry failed:', secondErr.message);
         return NextResponse.json(
@@ -150,11 +160,12 @@ export async function POST(request) {
     }
 
     console.log(
-      `[Diagnóstico] tokens=${result.tokens_usados} tempo=${result.tempo_geracao_ms}ms area=${body.area}`
+      `[Diagnóstico] tokens=${result.tokens_usados} tempo=${result.tempo_geracao_ms}ms area=${body.area} nivel=${scoring.nivel_maturidade}`
     );
 
     return NextResponse.json({
       diagnostico: result.diagnostico,
+      scoring,
       response_id: savedResponse?.id || null,
     });
   } catch (err) {

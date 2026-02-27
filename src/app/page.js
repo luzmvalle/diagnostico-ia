@@ -32,9 +32,12 @@ function Landing({ config, onStart }) {
           </p>
         </div>
 
-        <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-6">
+        <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-4">
           {title}
         </h1>
+        <p className="text-accent-purple-light text-base mb-6">
+          mesmo que tecnologia não seja a sua área
+        </p>
 
         <p className="text-lg text-gray-400 leading-relaxed mb-10 max-w-xl mx-auto">
           {subtitle}
@@ -49,7 +52,7 @@ function Landing({ config, onStart }) {
             <svg className="w-4 h-4 text-accent-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            2 minutos
+            Menos de 5 min
           </span>
           <span className="flex items-center gap-1.5">
             <svg className="w-4 h-4 text-accent-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -76,24 +79,50 @@ const DEFAULT_CONFIG = {
   step1_title: 'Quem é você',
   step1_subtitle: 'Conte um pouco sobre seu perfil profissional',
   area_options: ['Marketing', 'Vendas', 'Financeiro', 'RH', 'Operações', 'Jurídico', 'Produto', 'Consultoria', 'Saúde', 'Educação', 'Outro'],
-  nivel_options: ['Analista/Especialista', 'Coordenador', 'Gerente', 'Diretor', 'C-Level'],
-  tamanho_options: ['1-50 funcionários', '51-200 funcionários', '201-1000 funcionários', '1000+ funcionários'],
+  nivel_options: ['Estagiário(a)', 'Analista/Especialista', 'Coordenador(a)', 'Gerente', 'Diretor(a)', 'C-Level', 'Empreendedor(a)/Fundador(a)', 'Autônomo/Freelancer'],
+  tamanho_options: ['Não se aplica (autônomo)', '1-50 funcionários', '51-200 funcionários', '201-1000 funcionários', '1000+ funcionários'],
   step2_title: 'Sua rotina',
   step2_subtitle: 'Quais dessas atividades tomam mais seu tempo? (selecione pelo menos 2)',
   atividades_options: ['Escrever documentos, emails, relatórios', 'Analisar dados e planilhas', 'Criar apresentações', 'Pesquisar informações', 'Atender clientes/stakeholders', 'Organizar e planejar projetos', 'Revisar e aprovar materiais', 'Reuniões e alinhamentos', 'Gestão de pessoas', 'Processos repetitivos/manuais'],
   step3_title: 'Sua relação com IA',
   step3_subtitle: 'Queremos entender seu momento atual com inteligência artificial',
-  uso_ia_options: ['Não uso nenhuma', 'Uso de vez em quando', 'Uso regularmente'],
-  barreiras_options: ['Não sei por onde começar', 'Não sei quais ferramentas usar', 'Tenho medo de errar ou gerar resultados ruins', 'Minha empresa não permite ou não incentiva', 'Não vejo aplicação pro que eu faço', 'Falta de tempo pra aprender'],
+  uso_ia_options: [
+    'Nunca usei nenhuma ferramenta de IA',
+    'Já experimentei mas não uso no trabalho',
+    'Uso ocasionalmente (ChatGPT, Gemini ou similar)',
+    'Uso quase todo dia em tarefas específicas',
+    'Uso IA integrada em vários processos do meu trabalho',
+  ],
+  ferramentas_ia_options: ['ChatGPT', 'Gemini', 'Copilot', 'Claude', 'Perplexity', 'Midjourney/DALL-E', 'Canva com IA', 'Notion AI', 'Google Workspace com IA', 'Microsoft 365 com IA'],
+  barreiras_options: [
+    'Não sei por onde começar nem o que existe',
+    'Não confio nos resultados / tenho medo de errar',
+    'Simplesmente não tive tempo/prioridade de explorar',
+    'Não vejo aplicação específica pro que eu faço',
+    'Uso de maneira descentralizada, sem integração real no trabalho',
+    'Não sei como evoluir a forma que uso',
+    'Preocupação com privacidade/segurança dos dados',
+    'Minha empresa não permite ou não tem política clara sobre IA',
+  ],
   step4_title: 'O que você busca',
   step4_subtitle: 'O que você mais gostaria de conseguir com IA? (máximo 3)',
-  expectativas_options: ['Economizar tempo em tarefas repetitivas', 'Melhorar a qualidade do que produzo', 'Tomar decisões mais embasadas', 'Automatizar processos', 'Ser mais criativo', 'Me destacar profissionalmente'],
-  landing_title: 'Descubra como a IA pode transformar seu dia a dia profissional',
-  landing_subtitle: 'Responda 4 perguntas rápidas e receba um diagnóstico personalizado com ferramentas e casos de uso prontos para aplicar',
+  expectativas_options: [
+    'Economizar tempo em tarefas repetitivas',
+    'Melhorar a qualidade do que produzo',
+    'Tomar decisões mais embasadas',
+    'Automatizar processos',
+    'Ser mais criativo(a)',
+    'Me destacar profissionalmente',
+    'Aprender a criar prompts melhores',
+    'Integrar IA com ferramentas que já uso',
+    'Entender o que existe além do ChatGPT',
+  ],
+  landing_title: 'Descubra como usar IA para destravar o seu dia a dia',
+  landing_subtitle: 'Responda algumas perguntas rápidas e receba um diagnóstico personalizado com ferramentas, prompts prontos e um plano de ação sob medida',
   landing_cta: 'Fazer meu diagnóstico gratuito',
-  loading_messages: ['Analisando seu perfil profissional...', 'Identificando oportunidades de IA para sua área...', 'Mapeando ferramentas ideais para você...', 'Montando seu plano personalizado de 30 dias...', 'Quase lá! Finalizando seu diagnóstico...'],
+  loading_messages: ['Analisando seu perfil profissional...', 'Identificando oportunidades de IA para sua área...', 'Mapeando ferramentas ideais para você...', 'Preparando prompts personalizados...', 'Montando seu plano de ação de 30 dias...', 'Quase lá! Finalizando seu diagnóstico...'],
   footer_text: 'Feito por Destrava Lab — IA prática para profissionais',
-  footer_youtube: 'https://youtube.com/@destravalabai',
+  footer_youtube: 'https://youtube.com/@destravalab',
 };
 
 // ============================
@@ -115,9 +144,13 @@ export default function HomePage() {
     nivel_hierarquico: '',
     tamanho_empresa: '',
     atividades_tempo: [],
+    descricao_rotina: '',
     uso_ia_atual: '',
+    ferramentas_ia: [],
+    outra_ferramenta: '',
     barreiras_ia: [],
     expectativas_ia: [],
+    desejo_especifico: '',
   });
 
   // Load config on mount
@@ -197,7 +230,7 @@ export default function HomePage() {
       case 2:
         return formData.atividades_tempo.length >= 2;
       case 3:
-        return formData.uso_ia_atual && formData.barreiras_ia.length >= 1;
+        return formData.uso_ia_atual && formData.barreiras_ia.length >= 1 && formData.barreiras_ia.length <= 3;
       case 4:
         return formData.expectativas_ia.length >= 1 && formData.expectativas_ia.length <= 3;
       default:
@@ -242,6 +275,7 @@ export default function HomePage() {
 
       // Store result in sessionStorage
       sessionStorage.setItem('diag_resultado', JSON.stringify(data.diagnostico));
+      sessionStorage.setItem('diag_scoring', JSON.stringify(data.scoring || {}));
       sessionStorage.setItem('diag_nome', formData.nome);
 
       // Navigate to result

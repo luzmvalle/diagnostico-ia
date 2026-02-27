@@ -65,6 +65,25 @@ export default function Step4({ data, onChange, config }) {
       <p className="text-gray-500 text-sm mt-3">
         {selected.length}/3 selecionados
       </p>
+
+      {/* Campo aberto opcional */}
+      <div className="mt-6">
+        <label className="block text-sm font-medium text-gray-400 mb-2">
+          Algo específico que gostaria que a IA te ajudasse a resolver?
+          <span className="text-gray-600 ml-1">(opcional)</span>
+        </label>
+        <textarea
+          className="input-field resize-none"
+          rows={3}
+          maxLength={300}
+          placeholder="Ex: Gostaria de automatizar a criação dos relatórios mensais que faço no Excel..."
+          value={data.desejo_especifico || ''}
+          onChange={(e) => onChange({ desejo_especifico: e.target.value })}
+        />
+        <p className="text-gray-600 text-xs mt-1 text-right">
+          {(data.desejo_especifico || '').length}/300
+        </p>
+      </div>
     </div>
   );
 }

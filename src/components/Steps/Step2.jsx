@@ -59,6 +59,25 @@ export default function Step2({ data, onChange, config }) {
           Selecione pelo menos 2 atividades
         </p>
       )}
+
+      {/* Campo aberto opcional */}
+      <div className="mt-6">
+        <label className="block text-sm font-medium text-gray-400 mb-2">
+          Descreva brevemente o que mais toma seu tempo no dia a dia
+          <span className="text-gray-600 ml-1">(opcional)</span>
+        </label>
+        <textarea
+          className="input-field resize-none"
+          rows={3}
+          maxLength={300}
+          placeholder="Ex: Passo muito tempo formatando relatórios semanais e compilando dados de diferentes fontes..."
+          value={data.descricao_rotina || ''}
+          onChange={(e) => onChange({ descricao_rotina: e.target.value })}
+        />
+        <p className="text-gray-600 text-xs mt-1 text-right">
+          {(data.descricao_rotina || '').length}/300
+        </p>
+      </div>
     </div>
   );
 }
