@@ -7,7 +7,7 @@ Analise o perfil abaixo e gere um diagnóstico personalizado, concreto e acioná
 Responda EXCLUSIVAMENTE em JSON válido (sem markdown, sem \`\`\`):
 
 {
-  "resumo_perfil": "Uma frase resumindo quem é esta pessoa e seu momento",
+  "resumo_perfil": "Uma frase resumindo quem é esta pessoa e seu moment",
   "nivel_maturidade_ia": "Iniciante | Explorador | Praticante",
   "score_potencial_ia": 85,
   "casos_de_uso": [
@@ -86,7 +86,7 @@ Gere o diagnóstico personalizado completo em JSON.`;
     contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
     generationConfig: {
       temperature: 0.7,
-      maxOutputTokens: 4096,
+      maxOutputTokens: 8192,
     },
   });
 
