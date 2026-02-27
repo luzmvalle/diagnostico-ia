@@ -1,8 +1,16 @@
 import { NextResponse } from 'next/server';
-import { createServiceClient } from '@/lib/supabase-server';
 import { createHash } from 'crypto';
 
 export const dynamic = 'force-dynamic';
+
+function getSupabase() {
+  try {
+    const { createServiceClient } = require('@/lib/supabase-server');
+    return createServiceClient();
+  } catch {
+    return null;
+  }
+}
 
 export async function POST(request) {
   try {
@@ -12,10 +20,13 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
     }
 
+    const supabase = getSupabase();
+    if (!supabase) {
+      return NextResponse.json({ visit_id: null });
+    }
+
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
     const ipHash = createHash('sha256').update(ip).digest('hex').slice(0, 16);
-
-    const supabase = createServiceClient();
 
     const { data: existing } = await supabase
       .from('visits')
@@ -52,7 +63,7 @@ export async function POST(request) {
       return NextResponse.json({ visit_id: newVisit?.id });
     }
   } catch (err) {
-    console.error('Tracking error:', err);
-    return NextResponse.json({ error: 'Tracking failed' }, { status: 500 });
+    console.error('Tracking error:', err.message);
+    return NextResponse.json({ visit_id: null });
   }
 }
