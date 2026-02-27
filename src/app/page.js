@@ -154,24 +154,12 @@ export default function HomePage() {
   });
 
   // Load config on mount
-  useEffect(() => {
-    async function loadConfig() {
-      try {
-        const res = await fetch('/api/admin/config');
-        if (!res.ok) return; // Keep defaults
-        const data = await res.json();
-        if (!Array.isArray(data)) return; // Keep defaults
-        const map = {};
-        data.forEach((c) => {
-          map[c.id] = c.value;
-        });
-        setConfig((prev) => ({ ...prev, ...map }));
-      } catch {
-        // Keep defaults
-      }
-    }
-    loadConfig();
-  }, []);
+  // v2: Disabled Supabase config override — all options are now hardcoded
+  // in DEFAULT_CONFIG above. Re-enable if you need dynamic config later.
+  // useEffect(() => {
+  //   async function loadConfig() { ... }
+  //   loadConfig();
+  // }, []);
 
   // Session ID for tracking
   function getSessionId() {
